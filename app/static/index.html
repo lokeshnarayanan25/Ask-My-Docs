@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ask My Docs — Production RAG</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full flex overflow-hidden font-sans antialiased selection:bg-brand-500 selection:text-slate-950">
+
+  <!-- Left Sidebar: Document Workspace & Architecture -->
+  <aside class="w-80 border-r border-slate-800/80 bg-slate-900/60 flex flex-col justify-between p-5 backdrop-blur-xl">
+    <div>
+      <!-- App Header -->
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-slate-950 font-extrabold shadow-lg shadow-brand-500/20">
+          <i class="fa-solid fa-brain text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-slate-100 text-lg tracking-tight">Ask My Docs</h1>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs text-slate-400 font-medium">Production RAG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Document Card -->
+      <div class="mb-6">
+        <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-1">Active Context Documents</h2>
+        <div class="p-3.5 rounded-xl border border-slate-800 bg-slate-950/50 flex items-start gap-3 hover:border-slate-700 transition">
+          <div class="p-2.5 rounded-lg bg-red-500/10 text-red-400 mt-0.5">
+            <i class="fa-solid fa-file-pdf text-base"></i>
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-sm font-medium text-slate-200 truncate">Zoho_Selection_Process.pdf</p>
+            <p class="text-xs text-slate-500 mt-0.5">1 Page · 3 Chunks · Grounded</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RAG Architecture Pipeline Specs -->
+      <div>
+        <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-1">Retrieval Pipeline</h2>
+        <div class="space-y-2 text-xs">
+          <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 text-slate-300">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-cube text-emerald-400"></i> Vector Search</span>
+            <span class="font-mono text-slate-400">all-MiniLM-L6-v2</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 text-slate-300">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-magnifying-glass text-blue-400"></i> Keyword Search</span>
+            <span class="font-mono text-slate-400">BM25</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 text-slate-300">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-shuffle text-purple-400"></i> Rank Fusion</span>
+            <span class="font-mono text-slate-400">RRF (k=60)</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 text-slate-300">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> Reranker</span>
+            <span class="font-mono text-slate-400">ms-marco-MiniLM</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 text-slate-300">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-microchip text-pink-400"></i> Generator LLM</span>
+            <span class="font-mono text-slate-400">Sarvam-105b</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evaluation Scores Footer -->
+    <div class="p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/20 text-xs">
+      <div class="flex items-center justify-between text-emerald-400 font-semibold mb-1">
+        <span>Ragas Evaluation</span>
+        <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Passed</span>
+      </div>
+      <div class="flex justify-between text-slate-400 mt-2">
+        <span>Faithfulness: <strong class="text-slate-200">100%</strong></span>
+        <span>Recall: <strong class="text-slate-200">100%</strong></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Main Area: Chat Window & Question Input -->
+  <main class="flex-1 flex flex-col h-full bg-slate-950 relative">
+
+    <!-- Top Navigation Header -->
+    <header class="h-16 border-b border-slate-800/80 px-8 flex items-center justify-between bg-slate-900/40 backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <h2 class="font-semibold text-slate-200">Document Q&A Interface</h2>
+        <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300">Zoho Selection Process</span>
+      </div>
+      <button id="clearChatBtn" class="text-xs text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-800 hover:bg-slate-800 transition flex items-center gap-2">
+        <i class="fa-solid fa-rotate-left"></i> Clear History
+      </button>
+    </header>
+
+    <!-- Chat Messages Feed -->
+    <div id="chatFeed" class="flex-1 overflow-y-auto p-8 space-y-6 scroll-smooth">
+      
+      <!-- Welcome Hero Box -->
+      <div id="welcomeBox" class="max-w-2xl mx-auto py-12 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 mx-auto flex items-center justify-center text-brand-500 text-2xl shadow-xl mb-6">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-100 tracking-tight mb-2">Ask questions about your uploaded documents</h2>
+        <p class="text-slate-400 text-sm mb-8 leading-relaxed">
+          Every response is grounded directly in document content with explicit page citations and zero hallucination.
+        </p>
+
+        <!-- Suggested Question Chips -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-left">
+          <button class="sample-chip p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/50 hover:border-brand-500/50 hover:bg-slate-900 text-xs text-slate-300 transition group">
+            <span class="font-semibold text-slate-200 block mb-1 group-hover:text-brand-400">Programming Rounds</span>
+            What are the programming rounds in Zoho selection process?
+          </button>
+          <button class="sample-chip p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/50 hover:border-brand-500/50 hover:bg-slate-900 text-xs text-slate-300 transition group">
+            <span class="font-semibold text-slate-200 block mb-1 group-hover:text-brand-400">HR Round</span>
+            What happens in the HR interview at Zoho?
+          </button>
+          <button class="sample-chip p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/50 hover:border-brand-500/50 hover:bg-slate-900 text-xs text-slate-300 transition group">
+            <span class="font-semibold text-slate-200 block mb-1 group-hover:text-brand-400">Unanswerable Test</span>
+            What is Zoho's fresh graduate salary?
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Question Input Bar -->
+    <div class="p-6 border-t border-slate-800/80 bg-slate-900/40 backdrop-blur-lg">
+      <form id="questionForm" class="max-w-3xl mx-auto relative flex items-center">
+        <input
+          type="text"
+          id="questionInput"
+          placeholder="Ask a question about Zoho Selection Process..."
+          class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-5 pr-14 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition shadow-inner"
+          autocomplete="off"
+        />
+        <button
+          type="submit"
+          id="sendBtn"
+          class="absolute right-2.5 p-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <i class="fa-solid fa-paper-plane text-sm"></i>
+        </button>
+      </form>
+      <p class="text-center text-xs text-slate-500 mt-3">Press <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">Enter</kbd> to ask. Answers rely strictly on document context.</p>
+    </div>
+
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

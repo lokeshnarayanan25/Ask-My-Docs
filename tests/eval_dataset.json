@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What are the programming rounds in Zoho's selection process?",
+    "ground_truth": "There are two programming rounds where candidates must write full working code on a computer. Pseudo code is not accepted. The first round is basic, and the second round is harder and often asks candidates to build a small application such as a library or parking system."
+  },
+  {
+    "question": "What happens in the HR interview at Zoho?",
+    "ground_truth": "The HR interview is the last round where Zoho checks the candidate's communication, attitude, and interest in Zoho."
+  },
+  {
+    "question": "What is tested in the technical interview at Zoho?",
+    "ground_truth": "The technical interview covers data structures, algorithms, object oriented ideas, and databases. They may also ask about the candidate's projects."
+  },
+  {
+    "question": "What is the first round of Zoho's selection process?",
+    "ground_truth": "The first round is a written test with aptitude and logical reasoning questions. Some drives also add C programming questions such as finding the output of a small program. Only students who clear this round move to the next one."
+  },
+  {
+    "question": "Does Zoho care more about marks or skills?",
+    "ground_truth": "Zoho cares more about skills than marks."
+  }
+]
